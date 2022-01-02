@@ -31,4 +31,10 @@ export class CompraService {
     let url:string = this._bs.getURlApi() + 'compra/cantidad/' + negocio_id + '/' + year + '/' + month;
     return this.http.get(url);
   }
+
+  confirmarCompra(data:any){
+    let url:string = this._bs.getURlApi() + 'compra/confirmar';
+    return this.http.put(url, data);
+  }
+
 }

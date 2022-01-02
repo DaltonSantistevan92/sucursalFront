@@ -276,12 +276,21 @@
                         {{p.producto.categoria.detalle}}
                       </h5>
                     </a>
-                    <!-- <p class="mb-4 text-sm">
-                      Different people have different taste, and various types of music.
-                    </p> -->
-                    <div class="d-flex align-items-center justify-content-between">
-                      <button type="button" class="btn btn-outline-primary btn-sm mb-0">Abastecer</button>
+                    <p class="mb-0 text-sm">
+                      Stock: {{p.stock}}
+                    </p>
 
+                    <p class="mb-2 text-sm d-flex justify-content-between">
+                      <span>
+                        $ Compra: {{p.producto.precio_compra}}
+                      </span>
+                      <span>
+                        $ Venta: {{p.producto.precio_venta}}
+                      </span>
+                    </p>
+                    <div class="d-flex align-items-center justify-content-between">
+                      <button type="button" class="btn btn-outline-primary btn-sm mb-0">Editar</button>
+                      <button type="button" class="btn btn-outline-danger btn-sm mb-0">Quitar</button>
                     </div>
                   </div>
                 </div>

@@ -3,13 +3,27 @@
     <div class="col-12 mb-1">
       <div class="row">
         <div class="col-lg-6 col-7">
-          <div class="">
+          <div class="w-100">
             <h6>Productos</h6>
             <p class="text-sm mb-0">
               <i class="fa fa-check text-info" aria-hidden="true"></i>
               <span class="font-weight-bold ms-1">{{productosData.data.length}} Productos</span>
               en lista
             </p>
+          </div>
+        </div>
+
+        <div class="col-5 col-lg-6 d-flex justify-content-end">
+          <div class="w-50">
+            <mat-form-field appearance="legacy" class="w-100">
+              <mat-label>Filtrar categoría</mat-label>
+              <mat-select (selectionChange)="getProductos($event)" [(ngModel)]="categoria_id">
+                <mat-option *ngFor="let c of categorias" [value]="c.id">
+                  {{c.detalle}}
+                </mat-option>
+                <mat-option value="0">Todos</mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
         </div>
       </div>
@@ -83,7 +97,7 @@
         <div class="col-12">
           <mat-paginator [length]="productosData.data.length"
           [pageSize]="pageSize"
-          [pageSizeOptions]="[5, 10, 25, 100]"
+          [pageSizeOptions]="[7, 11, 22, 111]"
           aria-label="Select page"
           (page)="handlePage($event)">
         </mat-paginator>

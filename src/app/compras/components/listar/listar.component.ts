@@ -1,3 +1,5 @@
+import { Compra } from './../../../models/compra.model';
+import { PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackService } from './../../../shared/snack/snack.service';
 import { CompraService } from './../../../servicios/compra/compra.service';
@@ -27,8 +29,10 @@ export class ListarComponent implements OnInit {
   public compras:any[] = [];
 
   public textoMes:string = '';
-  public cant_pend:number = 0;
-  public cant_cnf:number = 0;
+  public controlCompras = false;
+
+  public pageSize:number = 10;
+  public pageNumber:number = 1;
 
   constructor(
     private _negocioService:NegocioService,
@@ -36,8 +40,7 @@ export class ListarComponent implements OnInit {
     private _compraService:CompraService,
     private _snakcService:SnackService,
     private _snack:MatSnackBar
-  ) {
-  }
+  ) { }
 
   ngOnInit(): void {
     this.getNegocios();
@@ -79,11 +82,7 @@ export class ListarComponent implements OnInit {
     this._compraService.get(negocio_id, status_id, year, month)
     .subscribe((res:any) => {
       this.compras = res;
-
-      this.compras.forEach((item) => {
-        if(item.status_id == 1) this.cant_pend++;
-        if(item.status_id == 2) this.cant_cnf++;
-      })
+      this.controlCompras = true;
     });
   }
 
@@ -104,17 +103,35 @@ export class ListarComponent implements OnInit {
     this.getCompras(this.negocio_id, this.status_id, this.year, this.mes);
   }
 
-  confirmar(compra:any){
+  confirmar(compra:Compra){
     let snackBarRef = this._snack.open('¿ Confirma la entrega de la compra ?', 'Sí confirmo');
 
-    console.log(compra);
-
     snackBarRef.onAction().subscribe(() => {
-      console.log('La compra se ha confirmado');
+      compra.status_id = 2;
+      this.animar(compra.id);
+
+      this._compraService.confirmarCompra({compra: compra})
+      .subscribe((res:any) => {
+        if(res.status){
+          this._snakcService.open(res.mensaje, 'text-primary');
+          console.log(res);
+        }
+      });
     });
 
     setTimeout(() => {
       snackBarRef.dismiss();
     }, 3000);
+  }
+
+  handlePage(e:PageEvent){
+    this.pageSize = e.pageSize;
+    this.pageNumber = e.pageIndex + 1;
+  }
+
+  animar(id:any){
+    let identificador = "compra-" + id;
+    const box = document.getElementById(identificador);
+    box?.classList.add('animate__flash');
   }
 }

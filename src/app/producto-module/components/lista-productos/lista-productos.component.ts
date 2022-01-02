@@ -1,3 +1,4 @@
+import { CategoriaService } from './../../../servicios/categoria/categoria.service';
 import { NuevoProductoComponent } from './../../modals/nuevo-producto/nuevo-producto.component';
 import { ToolService } from './../../../servicios/tool/tool.service';
 import { ProductoService } from './../../../servicios/producto/producto.service';
@@ -19,7 +20,9 @@ export class ListaProductosComponent implements OnInit {
     data: []
   };
 
+  public categorias:any[] = [];
   public producto!:Producto;
+  public categoria_id:any = 0;
 
   public pageSize:number = 11;
   public pageNumber:number = 1;
@@ -28,11 +31,13 @@ export class ListaProductosComponent implements OnInit {
     private _productoService:ProductoService,
     private _toolService:ToolService,
     private _snack:SnackService,
-    private dialog:MatDialog
+    private dialog:MatDialog,
+    private _categoriService:CategoriaService
   ) { }
 
   ngOnInit(): void {
     this.get();
+    this.getCategoria();
   }
 
   get(){
@@ -40,6 +45,13 @@ export class ListaProductosComponent implements OnInit {
     .subscribe((res:any) => {
       this.productosData = res;
     })
+  }
+
+  getCategoria(){
+    this._categoriService.get('asc')
+    .subscribe((res:any) => {
+      this.categorias = res.categoria;
+    });
   }
 
   view(image:string):string{
@@ -86,5 +98,19 @@ export class ListaProductosComponent implements OnInit {
   handlePage(e:PageEvent){
     this.pageSize = e.pageSize;
     this.pageNumber = e.pageIndex + 1;
+  }
+
+  getProductos(event:any){
+    if(this.categoria_id == 0){
+      this.get();
+    }else{
+      //Filtrar por la categoria
+      console.log(this.categoria_id);
+      this._productoService.byCategoria(this.categoria_id, 'A')
+      .subscribe((res:any) => {
+        this. productosData.data = res;
+        this.productosData.cantidad = res.length;
+      });
+    }
   }
 }
